@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-label="DEEPSYNTH RESEARCH">
+<defs><radialGradient id="g"><stop stop-color="#65518a" stop-opacity=".28"/><stop offset="1" stop-color="#101621" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="260" rx="16" fill="#101621"/><ellipse cx="1000" cy="130" rx="320" ry="230" fill="url(#g)"/>
+<path d="M40 209H1160" stroke="#697485" stroke-opacity=".32"/><circle cx="1115" cy="48" r="2" fill="#bdb1d7"/><circle cx="750" cy="55" r="1" fill="#d5dbea"/>
+<text x="48" y="55" fill="#a9b6c9" font-family="Segoe UI,Arial,sans-serif" font-size="13" letter-spacing="3">DENIS BM / GALAXY</text>
+<text x="48" y="122" fill="#edf1f7" font-family="Segoe UI,Arial,sans-serif" font-size="31" font-weight="600">DEEPSYNTH RESEARCH</text>
+<text x="48" y="158" fill="#a9b6c9" font-family="Segoe UI,Arial,sans-serif" font-size="17">Quality-aware audio-visual fusion</text>
+<g fill="#171f2d" stroke="#8e80b3"><rect x="775" y="80" width="110" height="42" rx="8"/><rect x="775" y="144" width="110" height="42" rx="8"/><rect x="989" y="112" width="147" height="42" rx="8"/></g>
+<path d="M885 101H933V133H989M885 165H933V133" fill="none" stroke="#a9b6c9" stroke-width="1.4"/>
+<g fill="#dce3ed" font-family="Segoe UI,Arial,sans-serif" font-size="12" text-anchor="middle"><text x="830" y="106">RGB</text><text x="830" y="170">MFCC</text><text x="1062" y="138">FUSION</text></g></svg>

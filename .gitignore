@@ -1,0 +1,16 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env*
+dataset_source/
+working_data/
+features/
+*.pth
+*.pt
+*.npy
+*.npz
+*.mp4
+*.wav
+scripts/split.json
+scripts/result_chart.png
