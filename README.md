@@ -4,7 +4,9 @@
 
 **Quality-aware audio-visual deepfake detection under video degradation.**
 
-A student research prototype by Denis Bm, a fifth-year student at Don State Technical University. The research question is whether reducing the visual branch's contribution when image quality drops can improve detection over a visual-only control.
+A student research prototype from a Computer Security student at Don State Technical University. It tests whether a frame-quality heuristic helps combine audio and visual scores when video quality drops.
+
+[Evaluation protocol](docs/METHODOLOGY.md) · [Pipeline scripts](scripts) · [Protocol checks](https://github.com/YgalaxyY/deepsynth-research/actions/workflows/checks.yml)
 
 ## Project context
 
