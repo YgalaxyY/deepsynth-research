@@ -1,48 +1,25 @@
-<img src="assets/project-header.svg" alt="DEEPSYNTH RESEARCH: Quality-aware audio-visual fusion" width="100%" />
-
 # DeepSynth Research
 
-**Quality-aware audio-visual deepfake detection under video degradation.**
+Учебный прототип детекции дипфейков по видео и звуку. Проверяю, помогает ли снижение веса видеопризнаков при ухудшении качества кадра. Результаты по обновлённой схеме оценки пока не опубликованы.
 
-A student research prototype from a Computer Security student at Don State Technical University. It tests whether a frame-quality heuristic helps combine audio and visual scores when video quality drops.
+[Методика](docs/METHODOLOGY.md) · [Сценарии эксперимента](scripts) · [Автоматические проверки](https://github.com/YgalaxyY/deepsynth-research/actions/workflows/checks.yml) · [English](README.en.md)
 
-[Evaluation protocol](docs/METHODOLOGY.md) · [Pipeline scripts](scripts) · [Protocol checks](https://github.com/YgalaxyY/deepsynth-research/actions/workflows/checks.yml)
+## Как устроен прототип
 
-## Project context
+- Из первого кадра извлекаются признаки предобученной EfficientNet-B4.
+- Первые две секунды звука описываются усреднёнными MFCC.
+- Две обучаемые ветви выдают оценки для изображения и звука. Их веса определяются резкостью кадра. Это эвристика на основе дисперсии лапласиана, а параметры функции заданы вручную.
 
-This is a personal educational project. It is included in a student portfolio as a research experiment. The source release documents the approach and its limits; benchmark results under the corrected protocol remain pending.
+## Воспроизведение
 
-## Method
-
-```text
-Video -> first RGB frame -> pretrained EfficientNet-B4 -> visual MLP -> p_visual
-Audio -> first 2 seconds -> 128 mean MFCC coefficients -> audio MLP -> p_audio
-Frame -> normalized Laplacian variance -> q -> fixed quality gate
-```
-
-The fusion rule is `w = sigmoid(10 * (q - 0.4))`, then `p = w * p_visual + (1 - w) * p_audio`. The MLP branches are trained; the quality gate parameters are fixed. This is a quality heuristic, not a calibrated confidence estimate.
-
-**Status:** source release prepared for rerunning experiments. Corrected-protocol benchmark results and trained weights are not included. No accuracy, novelty or state-of-the-art claim is made.
-
-## Reproduce
-
-Python 3.10+ and FFmpeg on PATH are required. Obtain [FakeAVCeleb](https://github.com/DASH-Lab/FakeAVCeleb) through its authors' access process; dataset files are not redistributed here. Respect the dataset terms and the licenses of the pretrained model and libraries.
+Нужны Python 3.10+, FFmpeg и датасет [FakeAVCeleb](https://github.com/DASH-Lab/FakeAVCeleb), полученный у авторов. Веса предобученного кодировщика загружаются при первом запуске.
 
 ```sh
-python -m venv .venv
-# Activate .venv for your OS, then:
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 ```
 
-Place the authorized dataset so these directories exist:
-
-```text
-dataset_source/FakeAVCeleb_v1.2/FakeAVCeleb_v1.2/RealVideo-RealAudio/
-dataset_source/FakeAVCeleb_v1.2/FakeAVCeleb_v1.2/FakeVideo-FakeAudio/
-```
-
-Then run in order:
+Поместите папки `RealVideo-RealAudio` и `FakeVideo-FakeAudio` в `dataset_source/FakeAVCeleb_v1.2/FakeAVCeleb_v1.2/`. Запускайте сценарии по порядку.
 
 ```sh
 python scripts/01_prepare_dataset.py
@@ -52,18 +29,10 @@ python scripts/04_train_fusion.py
 python scripts/05_evaluate.py
 ```
 
-The pipeline samples up to 200 clips per class, creates HQ/MQ/LQ encodings, extracts features, trains on HQ and evaluates the same held-out clips at each quality. The encoder downloads its pretrained weights on first use. Training is CPU-compatible and may take time. Feature `.npy` files use pickle; load only your own trusted local outputs.
+## Что проверяет эксперимент
 
-## Evaluation and limits
+Варианты одного клипа остаются в одной части выборки. Группировка идёт по папкам источников. Для полного разделения всех лиц, задействованных в подменах, нужна дополнительная проверка идентичностей или официальный сплит. Обучение идёт на HQ. Оценка сравнивает одни и те же отложенные клипы в вариантах HQ, MQ и LQ.
 
-- Source-directory IDs are held out together. No train clip appears in evaluation, and quality variants share the same partition. Full separation of all face-swap source/target identities still requires an identity graph or an official split.
-- The control is the visual branch of the jointly trained model. A separately trained visual baseline and audio-only baseline remain future work.
-- Only `RealVideo-RealAudio` and `FakeVideo-FakeAudio` are sampled. Mixed manipulation classes and cross-dataset testing remain future work.
-- One frame, mean MFCCs and Laplacian variance are deliberately simple approximations. There is no temporal modeling, face tracking or universal deepfake verdict.
-- Report ROC-AUC after rerunning; include dataset version, split, seed and failures. Do not reuse scores from an earlier protocol.
+Текущий контроль использует видеоветвь совместно обученной модели. Отдельно обученные аудио- и видео-бейзлайны, смешанные типы подмен и тестирование на другом наборе данных остаются следующими шагами. В открытой версии есть код и проверки протокола. Данные, веса и результаты повторного прогона в репозитории отсутствуют.
 
-See [methodology](docs/METHODOLOGY.md) and [release review](docs/RELEASE_REVIEW.md). Protocol tests run without PyTorch or dataset downloads. End-to-end training has not been rerun as part of this packaging pass.
-
-## Code rights
-
-No general reuse license is assigned in this release. Dataset and third-party software licenses are separate. Contact the author before redistribution of this project's own code.
+Условия использования кода, данных и сторонних моделей описаны в [английской документации](README.en.md#code-rights).
